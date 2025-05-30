@@ -17,7 +17,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { categoryFormSchema, type CategoryFormSchema } from "@/forms/category";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +33,6 @@ const CategoriesPage: NextPageWithLayout = () => {
   const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
   const [categoryToEdit, setCategoryToEdit] = useState<string | null>(null);
-
 
   // FORMS =====================================================================
   const createCategoryForm = useForm<CategoryFormSchema>({
@@ -80,7 +78,7 @@ const CategoriesPage: NextPageWithLayout = () => {
         setEditCategoryDialogOpen(false);
       },
     });
-  
+
   // HANDLERS ===================================================================
   const handleSubmitCreateCategory = (data: CategoryFormSchema) => {
     createCategory({
@@ -139,12 +137,13 @@ const CategoriesPage: NextPageWithLayout = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Add New Category</AlertDialogTitle>
               </AlertDialogHeader>
-              <Form {...createCategoryForm}>
-                <CategoryForm
-                  onSubmit={handleSubmitCreateCategory}
-                  submitText="Create Category"
-                />
-              </Form>
+              {/* <Form {...createCategoryForm}> */}
+              <CategoryForm
+                onSubmit={handleSubmitCreateCategory}
+                submitText="Create Category"
+                form={createCategoryForm}
+              />
+              {/* </Form> */}
 
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -196,12 +195,13 @@ const CategoriesPage: NextPageWithLayout = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Edit Category</AlertDialogTitle>
           </AlertDialogHeader>
-          <Form {...editCategoryForm}>
-            <CategoryForm
-              onSubmit={handleSubmitEditCategory}
-              submitText="Edit Category"
-            />
-          </Form>
+          {/* <Form {...editCategoryForm}> */}
+          <CategoryForm
+            onSubmit={handleSubmitEditCategory}
+            submitText="Edit Category"
+            form={editCategoryForm}
+          />
+          {/* </Form> */}
 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
