@@ -1,6 +1,6 @@
 import { Button } from "../ui/button";
 
-import { PRODUCTS } from "@/data/mock";
+import { useCartStore } from "@/store/cart";
 import { toRupiah } from "@/utils/toRupiah";
 import { CheckCircle2, Minus, Plus } from "lucide-react";
 import Image from "next/image";
@@ -21,20 +21,22 @@ import {
   SheetTitle,
 } from "../ui/sheet";
 import { PaymentQRCode } from "./PaymentQrCode";
+import { api } from "@/utils/api";
 
 type OrderItemProps = {
   id: string;
   name: string;
   price: number;
   quantity: number;
+  imageUrl: string;
 };
 
-const OrderItem = ({ id, name, price, quantity }: OrderItemProps) => {
+const OrderItem = ({ id, name, price, quantity, imageUrl }: OrderItemProps) => {
   return (
     <div className="flex gap-3" key={id}>
       <div className="relative aspect-square h-20 shrink-0 overflow-hidden rounded-xl">
         <Image
-          src={PRODUCTS.find((p) => p.id === id)?.image ?? ""}
+          src={imageUrl || "https://placehold.co/600x400"}
           alt={name}
           fill
           unoptimized
@@ -79,21 +81,40 @@ export const CreateOrderSheet = ({
   open,
   onOpenChange,
 }: CreateOrderSheetProps) => {
+  const cartStore = useCartStore();
+
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [paymentInfoLoading, setPaymentInfoLoading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  const subtotal = 100000;
-  const tax = useMemo(() => subtotal * 0.17, [subtotal]);
+  const subtotal = cartStore.items.reduce(
+    (a, b) => a + b.price * b.quantity,
+    0,
+  );
+  const tax = useMemo(() => subtotal * 0.1, [subtotal]);
   const grandTotal = useMemo(() => subtotal + tax, [subtotal, tax]);
 
-  const handleCreateOrder = () => {
-    setPaymentDialogOpen(true);
-    setPaymentInfoLoading(true);
+  const { mutate: createOrder, data: createOrderResponse } =
+    api.order.createOrder.useMutation({
+      onSuccess: () => {
+        alert("Order created successfully!");
 
-    setTimeout(() => {
-      setPaymentInfoLoading(false);
-    }, 3000);
+        setPaymentDialogOpen(true);
+      },
+    });
+
+  const handleCreateOrder = () => {
+    createOrder({
+      orderItems: cartStore.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    });
+    // setPaymentDialogOpen(true);
+    // setPaymentInfoLoading(true);
+    // setTimeout(() => {
+    //   setPaymentInfoLoading(false);
+    // }, 3000);
   };
 
   const handleRefresh = () => {
@@ -114,7 +135,16 @@ export const CreateOrderSheet = ({
           <div className="space-y-4 overflow-y-scroll p-4">
             <h1 className="text-xl font-medium">Order Items</h1>
             <div className="flex flex-col gap-6">
-              {/* Map order items here */}
+              {cartStore.items.map((item) => (
+                <OrderItem
+                  key={item.productId}
+                  id={item.productId}
+                  name={item.name}
+                  price={item.price}
+                  quantity={item.quantity}
+                  imageUrl={item.imageUrl}
+                />
+              ))}
             </div>
           </div>
 
@@ -164,15 +194,19 @@ export const CreateOrderSheet = ({
                 </Button>
 
                 {!paymentSuccess ? (
-                  <PaymentQRCode qrString="qr-string" />
+                  <PaymentQRCode
+                    qrString={createOrderResponse?.qrString ?? ""}
+                  />
                 ) : (
                   <CheckCircle2 className="size-80 text-green-500" />
                 )}
 
-                <p className="text-3xl font-medium">{toRupiah(grandTotal)}</p>
+                <p className="text-3xl font-medium">
+                  {toRupiah(createOrderResponse?.order.grandTotal ?? 0)}
+                </p>
 
                 <p className="text-muted-foreground text-sm">
-                  Transaction ID: 1234567890
+                  Transaction ID: {createOrderResponse?.order.id}
                 </p>
               </>
             )}

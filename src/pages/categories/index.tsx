@@ -162,9 +162,11 @@ const CategoriesPage: NextPageWithLayout = () => {
 
       <div className="grid grid-cols-4 gap-4">
         {categoriesIsLoading ? (
-          <div className="col-span-4 text-center">Loading...</div>
+          <div className="ext-muted-foreground col-span-4 text-center">
+            Loading...
+          </div>
         ) : categories?.length === 0 ? (
-          <div className="col-span-4 text-center">
+          <div className="col-span-4 text-center text-muted-foreground">
             No categories found. Please create a new category.
           </div>
         ) : (

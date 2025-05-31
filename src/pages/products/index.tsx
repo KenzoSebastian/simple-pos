@@ -112,9 +112,9 @@ const ProductsPage: NextPageWithLayout = () => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {productsIsLoading ? (
-          <div className="col-span-4 text-center">Loading...</div>
+          <div className="col-span-4 text-center text-muted-foreground">Loading...</div>
         ) : products?.length === 0 ? (
-          <div className="col-span-4 text-center">
+          <div className="col-span-4 text-center text-muted-foreground">
             No products found. Please add a new product to get started.
           </div>
         ) : (
