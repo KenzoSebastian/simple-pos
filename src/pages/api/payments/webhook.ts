@@ -13,7 +13,7 @@ type xenditWebhookBody = {
 };
 
 const handler: NextApiHandler = async (req, res) => {
-  if (req.method !== "POST") return res.status(405).send("Method Not Allowed broooheew");
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
   const body = req.body as xenditWebhookBody;
 
