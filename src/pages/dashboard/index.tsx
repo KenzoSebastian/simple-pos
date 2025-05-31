@@ -18,6 +18,7 @@ import { useState } from "react";
 import type { NextPageWithLayout } from "../_app";
 
 const DashboardPage: NextPageWithLayout = () => {
+  console.log("DashboardPage rendered");
   const cartStore = useCartStore();
 
   const [searchQuery, setSearchQuery] = useState("");
