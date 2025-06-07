@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
 import "@/styles/globals.css";
 import { api } from "@/utils/api";
@@ -27,6 +28,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <div className={`${outfit.className}`}>
           {getLayout(<Component {...pageProps} />)}
+          <Toaster position="top-right" />
         </div>
       </ThemeProvider>
     </ClerkProvider>

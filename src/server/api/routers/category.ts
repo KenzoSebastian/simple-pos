@@ -13,6 +13,11 @@ export const categoryRouter = createTRPCRouter({
         id: true,
         name: true,
         productcount: true,
+        _count: {
+          select: {
+            products: true,
+          },
+        },
       },
     });
 

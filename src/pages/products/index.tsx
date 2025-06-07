@@ -23,6 +23,7 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { productFormSchema, type ProductFormSchema } from "@/forms/product";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 const ProductsPage: NextPageWithLayout = () => {
   const apiUtils = api.useUtils();
@@ -34,14 +35,16 @@ const ProductsPage: NextPageWithLayout = () => {
     useState<boolean>(false);
 
   const { data: products, isLoading: productsIsLoading } =
-    api.product.getProducts.useQuery();
+    api.product.getProducts.useQuery({
+      categoryId: "all",
+    });
 
   const { mutate: createProduct } = api.product.createProduct.useMutation({
     onSuccess: async () => {
       await apiUtils.product.getProducts.invalidate();
       setCreateProductDialogOpen(false);
       setUploadedProductImageUrl(null);
-      alert("Product created successfully!");
+      toast("Product created successfully!");
     },
   });
 
@@ -51,7 +54,7 @@ const ProductsPage: NextPageWithLayout = () => {
 
   const handleSubmitCreateProduct = (values: ProductFormSchema) => {
     if (!uploadedProductImageUrl) {
-      alert("Please upload a product image first");
+      toast("Please upload a product image first");
       return;
     }
     createProduct({
@@ -112,9 +115,11 @@ const ProductsPage: NextPageWithLayout = () => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {productsIsLoading ? (
-          <div className="col-span-4 text-center text-muted-foreground">Loading...</div>
+          <div className="text-muted-foreground col-span-4 text-center">
+            Loading...
+          </div>
         ) : products?.length === 0 ? (
-          <div className="col-span-4 text-center text-muted-foreground">
+          <div className="text-muted-foreground col-span-4 text-center">
             No products found. Please add a new product to get started.
           </div>
         ) : (

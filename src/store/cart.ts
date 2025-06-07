@@ -13,6 +13,7 @@ type AddToCartItem = Omit<CartItem, "quantity">;
 interface cartState {
   items: CartItem[];
   addToCart: (newItem: AddToCartItem) => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<cartState>()((set) => ({
@@ -44,6 +45,14 @@ export const useCartStore = create<cartState>()((set) => ({
       return {
         ...currentState,
         items: duplicateItems,
+      };
+    });
+  },
+  clearCart: () => {
+    set((currentState) => {
+      return {
+        ...currentState,
+        items: [],
       };
     });
   },

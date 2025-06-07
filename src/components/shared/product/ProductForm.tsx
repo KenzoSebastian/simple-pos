@@ -20,6 +20,7 @@ import { Bucket } from "@/server/bucket";
 import { api } from "@/utils/api";
 import { type ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 type ProductFormProps = {
   onSubmit: (values: ProductFormSchema) => void;
@@ -53,7 +54,7 @@ export const ProductForm = ({
         token,
       });
       onChangeImageUrl(imageUrl);
-      alert("uploaded image");
+      toast("uploaded image");
     }
   };
 

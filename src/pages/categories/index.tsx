@@ -24,6 +24,7 @@ import type { ReactElement } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { NextPageWithLayout } from "../_app";
+import { toast } from "sonner";
 
 const CategoriesPage: NextPageWithLayout = () => {
   const apiUtils = api.useUtils();
@@ -51,7 +52,7 @@ const CategoriesPage: NextPageWithLayout = () => {
     onSuccess: async () => {
       await apiUtils.category.getCategories.invalidate();
 
-      alert("Category created successfully!");
+      toast("Category created successfully!");
       setCreateCategoryDialogOpen(false);
       createCategoryForm.reset();
     },
@@ -62,7 +63,7 @@ const CategoriesPage: NextPageWithLayout = () => {
       onSuccess: async () => {
         await apiUtils.category.getCategories.invalidate();
 
-        alert("Category deleted successfully!");
+        toast("Category deleted successfully!");
         setCategoryToDelete(null);
       },
     });
@@ -72,7 +73,7 @@ const CategoriesPage: NextPageWithLayout = () => {
       onSuccess: async () => {
         await apiUtils.category.getCategories.invalidate();
 
-        alert("Category edited successfully!");
+        toast("Category edited successfully!");
         editCategoryForm.reset();
         setCategoryToEdit(null);
         setEditCategoryDialogOpen(false);
